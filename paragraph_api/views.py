@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from .models import CustomUser, Paragraph, Word
 from .serializers import CustomUserSerializer
+from django.db.models import Count
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 # SIGNUP
@@ -57,3 +58,17 @@ def add_paragraph(request):
         Word.objects.create(word=word, paragraph=paragraph, count=count)
 
     return Response({'message': 'Paragraph added successfully'}, status=status.HTTP_201_CREATED)
+
+# SEARCH_WORD
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def search_word(request, word):
+    word = word.lower()
+
+    # Find the top 10 paragraphs sorted by the count of the word
+    results = Word.objects.filter(word=word).values('paragraph_id').annotate(count=Count('word')).order_by('-count')[:10]
+    
+    # Extract paragraph IDs from results
+    paragraph_ids = [result['paragraph_id'] for result in results]
+
+    return Response({'paragraph_ids': paragraph_ids}, status=status.HTTP_200_OK)
