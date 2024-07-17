@@ -36,6 +36,14 @@ def login_view(request):
         return Response({'message': 'Logged in successfully'}, status=status.HTTP_200_OK)
     return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
 
+# CURRENT_USER
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def current_user(request):
+    user = request.user
+    serializer = CustomUserSerializer(user)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
 # ADD_PARAGRAPH
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
