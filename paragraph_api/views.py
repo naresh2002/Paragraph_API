@@ -1,18 +1,27 @@
 from django.contrib.auth import authenticate, login, logout
 from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, parser_classes
+from rest_framework.parsers import JSONParser
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from .models import CustomUser, Paragraph, Word
-from .serializers import CustomUserSerializer
+from .serializers import CustomUserSerializer, ParagraphSerializer
 from django.db.models import Count
 from rest_framework_simplejwt.views import TokenObtainPairView
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 # SIGNUP
 @csrf_exempt
+@swagger_auto_schema(
+    method='post',
+    request_body=CustomUserSerializer,
+    responses={201: CustomUserSerializer, 400: 'Invalid input'}
+)
 @api_view(['POST'])
 @permission_classes([AllowAny])
+@parser_classes([JSONParser])
 def signup(request):
     serializer = CustomUserSerializer(data=request.data)
     if serializer.is_valid():
@@ -23,10 +32,22 @@ def signup(request):
 class CustomTokenObtainPairView(TokenObtainPairView):
     permission_classes = (AllowAny,)
 
-# LOGIN_VIEW
+# LOGIN
 @csrf_exempt
+@swagger_auto_schema(
+    method='post',
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'email': openapi.Schema(type=openapi.TYPE_STRING, description='Email'),
+            'password': openapi.Schema(type=openapi.TYPE_STRING, description='Password')
+        }
+    ),
+    responses={200: 'Logged in successfully', 400: 'Invalid credentials'}
+)
 @api_view(['POST'])
 @permission_classes([AllowAny])
+@parser_classes([JSONParser])
 def login_view(request):
     email = request.data.get('email')
     password = request.data.get('password')
@@ -37,6 +58,10 @@ def login_view(request):
     return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
 
 # CURRENT_USER
+@swagger_auto_schema(
+    method='get',
+    responses={200: CustomUserSerializer}
+)
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def current_user(request):
@@ -45,8 +70,20 @@ def current_user(request):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 # ADD_PARAGRAPH
+@swagger_auto_schema(
+    method='post',
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'paragraph': openapi.Schema(type=openapi.TYPE_STRING, description='Text of the paragraph')
+        }
+    ),
+    responses={201: 'Paragraph added successfully', 400: 'Invalid input'},
+    security=[{'Bearer': []}]
+)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@parser_classes([JSONParser])
 def add_paragraph(request):
     paragraph_text = request.data.get('paragraph', '')
     user = request.user
@@ -68,6 +105,14 @@ def add_paragraph(request):
     return Response({'message': 'Paragraph added successfully'}, status=status.HTTP_201_CREATED)
 
 # SEARCH_WORD
+@swagger_auto_schema(
+    method='get',
+    manual_parameters=[
+        openapi.Parameter('word', openapi.IN_PATH, description="Word to search for", type=openapi.TYPE_STRING)
+    ],
+    responses={200: 'Paragraphs retrieved successfully', 404: 'No paragraphs found'},
+    security=[{'Bearer': []}]
+)
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def search_word(request, word):
@@ -82,6 +127,11 @@ def search_word(request, word):
     return Response({'paragraph_ids': paragraph_ids}, status=status.HTTP_200_OK)
 
 # LOGOUT
+@swagger_auto_schema(
+    method='post',
+    responses={200: 'Logged out successfully'},
+    security=[{'Bearer': []}]
+)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def logout_view(request):
