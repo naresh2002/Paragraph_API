@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import check_password
 from .forms import SignUpForm, LoginForm
-from .models import User
+from .models import CustomUser
 import json
 
 @csrf_exempt
@@ -26,14 +26,14 @@ def login(request):
             name = form.cleaned_data['name']
             password = form.cleaned_data['password']
             try:
-                user = User.objects.get(name=name)
+                user = CustomUser.objects.get(name=name)
                 if check_password(password, user.password):
                     request.session['user_name'] = user.name
                     request.session.save()
                     return JsonResponse({'message': 'Login successful'}, status=200)
                 else:
                     return JsonResponse({'error': 'Invalid name or password'}, status=400)
-            except User.DoesNotExist:
+            except CustomUser.DoesNotExist:
                 return JsonResponse({'error': 'Invalid name or password'}, status=400)
         else:
             return JsonResponse({'errors': form.errors}, status=400)

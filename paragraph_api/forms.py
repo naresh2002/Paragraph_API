@@ -1,5 +1,5 @@
 from django import forms
-from .models import User
+from .models import CustomUser
 from django.contrib.auth.hashers import make_password
 
 class SignUpForm(forms.ModelForm):
@@ -7,7 +7,7 @@ class SignUpForm(forms.ModelForm):
     password_confirm = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
 
     class Meta:
-        model = User
+        model = CustomUser
         fields = ['name', 'email', 'dob' 'password']
 
     def clean(self):

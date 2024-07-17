@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from .models import User, Paragraph, Word
+from .models import CustomUser, Paragraph, Word
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = CustomUser
         fields = '__all__'
 
 class ParagraphSerializer(serializers.ModelSerializer):
