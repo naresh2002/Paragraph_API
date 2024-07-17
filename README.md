@@ -68,6 +68,24 @@ The project is designed to manage user-submitted paragraphs, providing endpoints
 
 8. Open a new terminal and test the endpoints given below using curl commands.
 
+## Authentication
+
+After logging in, you will receive both a refresh token and an access token. The access token is required for authenticating requests to protected endpoints. 
+
+### Using Tokens with cURL
+
+Include the access token in the `Authorization` header as follows:
+```bash
+-H "Authorization: Bearer <your_access_token>"
+```
+### Using Tokens with Postman
+After logging in, copy the access token from the response.
+For each protected endpoint request:
+Open Postman and select the endpoint.
+Go to the "Authorization" tab.
+Select "Bearer Token" from the "Type" dropdown.
+Paste the access token into the "Token" field.
+
 ## Endpoints
 
 1. **Signup** [POST]  
@@ -94,7 +112,14 @@ The project is designed to manage user-submitted paragraphs, providing endpoints
         "email": "naresh@gmail.com",
         "password": "Naresh@12345"
     }'
-    ```
+    ```  
+    Response example :  
+    ```bash
+   {
+      "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcyMTMwNDQ3MiwiaWF0IjoxNzIxMjE4MDcyLCJqdGkiOiI2Mzg5MTk5ZmEzNGM0OGJlOTNhZmNiNWRhMmVjOTU5NyIsInVzZXJfaWQiOjF9.oo3v-f8EY73DnmEFYovVxJ9yguV8QbrsVBNRpFA6E70",
+      "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIxMjIxNjcyLCJpYXQiOjE3MjEyMTgwNzIsImp0aSI6IjAxYWI2YTUyOGZkNTRlNjQ4MTU5ZGEzYjJhNDgzZDhjIiwidXNlcl9pZCI6MX0.e5C57PJzer4O5GPRt2HxksHSnXVOqazeXJtuxVgVvqY"
+   }
+   ```  
 
 3. **Current User** [GET]  
     ```http://127.0.0.1:8000/api/current_user/```  
@@ -114,6 +139,24 @@ The project is designed to manage user-submitted paragraphs, providing endpoints
     -d '{
         "paragraph": "This is a sample paragraph to be added."
     }'
+    ```  
+    (a) Example 1:  
+    ```bash
+    curl -X POST http://localhost:8000/api/add_paragraph/ \
+    -H "Authorization: Bearer <your_access_token>" \
+    -H "Content-Type: application/json" \
+    -d '{
+        "paragraph": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Magna ac placerat vestibulum lectus. Elit duis tristique sollicitudin nibh sit amet commodo. Senectus et netus et malesuada fames. Fermentum iaculis eu non diam phasellus vestibulum lorem sed. Dictumst quisque sagittis purus sit amet volutpat consequat mauris. Aliquam ut porttitor leo a diam sollicitudin tempor. Consectetur a erat nam atlectus urna duis convallis. Sed viverra ipsum nunc aliquet bibendum enim facilisis gravida neque."
+    }'
+    ```  
+    (b) Example 2:  
+    ```bash
+    curl -X POST http://localhost:8000/api/add_paragraph/ \
+    -H "Authorization: Bearer <your_access_token>" \
+    -H "Content-Type: application/json" \
+    -d '{
+        "paragraph": "Maecenas volutpat blandit aliquam etiam erat velit scelerisque. Lectus sit amet est placerat in egestas erat imperdiet. Ante in nibh mauris cursus mattis. Tellus rutrum tellus pellentesque eu tincidunt. Euismod quis viverra nibh cras pulvinar mattis. Proin nibh nisl condimentum id venenatis a. Quam elementum pulvinar etiam non quam. Arcu dictum varius duis at consectetur lorem donec. Aliquet porttitor lacus luctus accumsan tortor. Duis ut diam quam nulla porttitor massa id."
+    }'
     ```
 
 5. **Search Word** [GET]  
@@ -122,7 +165,17 @@ The project is designed to manage user-submitted paragraphs, providing endpoints
     ```bash
     curl -X GET http://localhost:8000/api/search_word/sampleword/ \
     -H "Authorization: Bearer <your_access_token>"
-    ```
+    ```   
+    (a) Example 1:  
+    ```bash
+    curl -X GET http://localhost:8000/api/search_word/lorem/ \
+    -H "Authorization: Bearer <your_access_token>"
+    ```  
+    (b) Example 2:  
+    ```bash
+    curl -X GET http://localhost:8000/api/search_word/Maecenas/ \
+    -H "Authorization: Bearer <your_access_token>"
+    ```  
 
 6. **Logout** [POST]  
     ```http://127.0.0.1:8000/api/logout/```  
