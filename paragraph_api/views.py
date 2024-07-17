@@ -1,40 +1,36 @@
-from django.http import JsonResponse
+from django.contrib.auth import authenticate, login
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.hashers import check_password
-from .forms import SignUpForm, LoginForm
-from .models import CustomUser
-import json
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from .models import CustomUser, Paragraph, Word
+from .serializers import CustomUserSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
 
+# SIGNUP
 @csrf_exempt
+@api_view(['POST'])
+@permission_classes([AllowAny])
 def signup(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        form = SignUpForm(data)
-        if form.is_valid():
-            form.save()
-            return JsonResponse({'message': 'User created successfully'}, status=201)
-        else:
-            return JsonResponse({'errors': form.errors}, status=400)
-    return JsonResponse({'error': 'Only POST method is allowed'}, status=405)
+    serializer = CustomUserSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class CustomTokenObtainPairView(TokenObtainPairView):
+    permission_classes = (AllowAny,)
+
+# LOGIN_VIEW
 @csrf_exempt
-def login(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        form = LoginForm(data)
-        if form.is_valid():
-            name = form.cleaned_data['name']
-            password = form.cleaned_data['password']
-            try:
-                user = CustomUser.objects.get(name=name)
-                if check_password(password, user.password):
-                    request.session['user_name'] = user.name
-                    request.session.save()
-                    return JsonResponse({'message': 'Login successful'}, status=200)
-                else:
-                    return JsonResponse({'error': 'Invalid name or password'}, status=400)
-            except CustomUser.DoesNotExist:
-                return JsonResponse({'error': 'Invalid name or password'}, status=400)
-        else:
-            return JsonResponse({'errors': form.errors}, status=400)
-    return JsonResponse({'error': 'Only POST method is allowed'}, status=405)
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def login_view(request):
+    email = request.data.get('email')
+    password = request.data.get('password')
+    user = authenticate(request, email=email, password=password)
+    if user is not None:
+        login(request, user)
+        return Response({'message': 'Logged in successfully'}, status=status.HTTP_200_OK)
+    return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
