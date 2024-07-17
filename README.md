@@ -19,7 +19,11 @@ The project is designed to manage user-submitted paragraphs, providing endpoints
 3. **SimpleJWT** for tokenisation  
     ```bash
     pip install djangorestframework-simplejwt
-    ```
+    ```  
+4. **drf_yasg** for Swagger documentation  
+    ```bash
+    pip install drf-yasg
+    ```  
 
 ## How to Run This Project
 
@@ -67,6 +71,150 @@ The project is designed to manage user-submitted paragraphs, providing endpoints
     ```
 
 8. Open a new terminal and test the endpoints given below using curl commands.
+
+## Endpoints
+1. **Signup** [POST]  
+
+POST /api/signup/  
+
+Request Body:  
+```json
+{
+"name": "Naresh Kumar",
+"email": "naresh@gmail.com",
+"dob": "2000-01-01",
+"password": "Naresh@12345"
+}
+```  
+
+Curl Command:  
+```bash
+curl -X POST http://localhost:8000/api/signup/
+-H "Content-Type: application/json"
+-d '{
+"name": "Naresh Kumar",
+"email": "naresh@gmail.com",
+"dob": "2000-01-01",
+"password": "Naresh@12345"
+}'
+```
+
+2. **Login** [POST]  
+POST /api/login/  
+
+Request Body:  
+```json
+{
+"email": "naresh@gmail.com",
+"password": "Naresh@12345"
+}
+```  
+
+Curl Command:  
+```bash
+curl -X POST http://localhost:8000/api/login/
+-H "Content-Type: application/json"
+-d '{
+"email": "naresh@gmail.com",
+"password": "Naresh@12345"
+}'
+```
+
+Response:  
+```json
+{
+"refresh": "<refresh_token>",
+"access": "<access_token>"
+}
+```
+
+Adding Bearer Token in Swagger UI  
+To use endpoints that require authentication, you need to include the access token in the Authorization header.
+
+Click on the Authorize button in the Swagger UI.  
+Enter the token in the following format:  
+Bearer <access_token>  
+Click Authorize and then Close.  
+
+3. **Current User** [GET]  
+GET /api/current_user/  
+
+Headers:  
+Authorization: Bearer <access_token>  
+
+Curl Command:  
+```bash
+curl -X GET http://localhost:8000/api/current_user/
+-H "Authorization: Bearer <access_token>"
+```
+
+4. **Add Paragraph** [POST]  
+POST /api/add_paragraph/  
+
+Request Body:  
+```json
+{
+"paragraph": "This is a sample paragraph."
+}
+```
+
+Headers:  
+Authorization: Bearer <access_token>  
+
+Curl Command:  
+```bash
+curl -X POST http://localhost:8000/api/add_paragraph/
+-H "Content-Type: application/json"
+-H "Authorization: Bearer <access_token>"
+-d '{
+"paragraph": "This is a sample paragraph."
+}'
+```
+
+5. **Search Word** [GET]  
+GET /api/search_word/{word}/  
+
+Headers:  
+Authorization: Bearer <access_token>  
+
+Curl Command:  
+```bash
+curl -X GET http://localhost:8000/api/search_word/sample/
+-H "Authorization: Bearer <access_token>"
+```
+
+6. **Logout** [POST]  
+POST /api/logout/  
+
+Headers:  
+Authorization: Bearer <access_token>  
+
+Curl Command:  
+```bash
+curl -X POST http://localhost:8000/api/logout/
+-H "Authorization: Bearer <access_token>"
+```
+
+## Swagger UI Documentation
+To view and interact with the API using Swagger UI, follow these steps:
+
+Run the Django server:
+```bash
+python manage.py runserver
+```
+Open a web browser and go to:
+```http
+http://localhost:8000/swagger/
+```
+In Swagger UI, you will see all the available endpoints, their methods, request parameters, and responses. You can also interact with these endpoints directly from the UI.
+
+## Summary  
+
+This project includes endpoints for user authentication, adding paragraphs, searching for words, and managing user sessions. All sensitive endpoints require an access token, which is obtained upon logging in. This token must be included in the Authorization header as "Bearer <access_token>" for subsequent requests.  
+
+Make sure to install all required packages and set up the environment as described. Use the provided curl commands or Swagger UI to test the API endpoints.  
+
+<!-- Without Swagger -->
 
 ## Authentication
 
