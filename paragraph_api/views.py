@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
@@ -80,3 +80,10 @@ def search_word(request, word):
     paragraph_ids = [result['paragraph_id'] for result in results]
 
     return Response({'paragraph_ids': paragraph_ids}, status=status.HTTP_200_OK)
+
+# LOGOUT
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def logout_view(request):
+    logout(request)
+    return Response({'message': 'Logged out successfully'}, status=status.HTTP_200_OK)
