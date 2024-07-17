@@ -74,7 +74,9 @@ The project is designed to manage user-submitted paragraphs, providing endpoints
 
 ## Endpoints
 1. **Signup** [POST]  
+
    ``` /api/signup/ ```  
+
    Request Body:  
    ```json
    {
@@ -98,100 +100,105 @@ The project is designed to manage user-submitted paragraphs, providing endpoints
    ```
 
 2. **Login** [POST]  
-POST /api/login/  
 
-Request Body:  
-```json
-{
-"email": "naresh@gmail.com",
-"password": "Naresh@12345"
-}
-```  
+   ``` /api/login/ ```  
 
-Curl Command:  
-```bash
-curl -X POST http://localhost:8000/api/login/
--H "Content-Type: application/json"
--d '{
-"email": "naresh@gmail.com",
-"password": "Naresh@12345"
-}'
-```
+   Request Body:  
+   ```json
+   {
+   "email": "naresh@gmail.com",
+   "password": "Naresh@12345"
+   }
+   ```  
 
-Response:  
-```json
-{
-"refresh": "<refresh_token>",
-"access": "<access_token>"
-}
-```
+   Curl Command:  
+   ```bash
+   curl -X POST http://localhost:8000/api/login/
+   -H "Content-Type: application/json"
+   -d '{
+   "email": "naresh@gmail.com",
+   "password": "Naresh@12345"
+   }'
+   ```
 
-Adding Bearer Token in Swagger UI  
-To use endpoints that require authentication, you need to include the access token in the Authorization header.
+   Response:  
+   ```json
+   {
+   "refresh": "<refresh_token>",
+   "access": "<access_token>"
+   }
+   ```
 
-Click on the Authorize button in the Swagger UI.  
-Enter the token in the following format:  
-Bearer <access_token>  
-Click Authorize and then Close.  
+   **Adding Bearer Token in Swagger UI**  
+   To use endpoints that require authentication, you need to include the access token in the Authorization header.
+
+   Click on the Authorize button in the Swagger UI.  
+   Enter the token in the following format:  
+   Bearer <access_token>  
+   Click Authorize and then Close.  
 
 3. **Current User** [GET]  
-GET /api/current_user/  
 
-Headers:  
-Authorization: Bearer <access_token>  
+   ``` /api/current_user/ ```  
 
-Curl Command:  
-```bash
-curl -X GET http://localhost:8000/api/current_user/
--H "Authorization: Bearer <access_token>"
-```
+   Headers:  
+   Authorization: Bearer <access_token>  
+
+   Curl Command:  
+   ```bash
+   curl -X GET http://localhost:8000/api/current_user/
+   -H "Authorization: Bearer <access_token>"
+   ```
 
 4. **Add Paragraph** [POST]  
-POST /api/add_paragraph/  
 
-Request Body:  
-```json
-{
-"paragraph": "This is a sample paragraph."
-}
-```
+   ``` /api/add_paragraph/ ```  
 
-Headers:  
-Authorization: Bearer <access_token>  
+   Request Body:  
+   ```json
+   {
+   "paragraph": "This is a sample paragraph."
+   }
+   ```
 
-Curl Command:  
-```bash
-curl -X POST http://localhost:8000/api/add_paragraph/
--H "Content-Type: application/json"
--H "Authorization: Bearer <access_token>"
--d '{
-"paragraph": "This is a sample paragraph."
-}'
-```
+   Headers:  
+   Authorization: Bearer <access_token>  
+
+   Curl Command:  
+   ```bash
+   curl -X POST http://localhost:8000/api/add_paragraph/
+   -H "Content-Type: application/json"
+   -H "Authorization: Bearer <access_token>"
+   -d '{
+   "paragraph": "This is a sample paragraph."
+   }'
+   ```
 
 5. **Search Word** [GET]  
-GET /api/search_word/{word}/  
 
-Headers:  
-Authorization: Bearer <access_token>  
+   ``` /api/search_word/{word}/ ```  
 
-Curl Command:  
-```bash
-curl -X GET http://localhost:8000/api/search_word/sample/
--H "Authorization: Bearer <access_token>"
-```
+   Headers:  
+   Authorization: Bearer <access_token>  
+
+   Curl Command:  
+   ```bash
+   curl -X GET http://localhost:8000/api/search_word/sample/
+   -H "Authorization: Bearer <access_token>"
+   ```
 
 6. **Logout** [POST]  
-POST /api/logout/  
 
-Headers:  
-Authorization: Bearer <access_token>  
+   ``` /api/logout/ ```  
 
-Curl Command:  
-```bash
-curl -X POST http://localhost:8000/api/logout/
--H "Authorization: Bearer <access_token>"
-```
+   Headers:  
+   Authorization: Bearer <access_token>  
+
+   Curl Command:  
+   ```bash
+   curl -X POST http://localhost:8000/api/logout/
+   -H "Authorization: Bearer <access_token>"
+   ```
 
 ## Swagger UI Documentation
 To view and interact with the API using Swagger UI, follow these steps:
@@ -201,7 +208,7 @@ Run the Django server:
 python manage.py runserver
 ```
 Open a web browser and go to:
-```http
+```
 http://localhost:8000/swagger/
 ```
 In Swagger UI, you will see all the available endpoints, their methods, request parameters, and responses. You can also interact with these endpoints directly from the UI.
