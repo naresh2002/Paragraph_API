@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from .models import CustomUser, Paragraph, Word
 from .serializers import CustomUserSerializer
@@ -34,3 +34,26 @@ def login_view(request):
         login(request, user)
         return Response({'message': 'Logged in successfully'}, status=status.HTTP_200_OK)
     return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+
+# ADD_PARAGRAPH
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_paragraph(request):
+    paragraph_text = request.data.get('paragraph', '')
+    user = request.user
+
+    # Create the paragraph
+    paragraph = Paragraph.objects.create(text=paragraph_text, user=user)
+
+    # Tokenize the paragraph
+    words = paragraph_text.split()
+    word_counts = {}
+    for word in words:
+        word = word.strip('.').lower()
+        word_counts[word] = word_counts.get(word, 0) + 1
+    
+    # Create word entries in the database
+    for word, count in word_counts.items():
+        Word.objects.create(word=word, paragraph=paragraph, count=count)
+
+    return Response({'message': 'Paragraph added successfully'}, status=status.HTTP_201_CREATED)
