@@ -1,6 +1,6 @@
 # Paragraph_API
 
-A REST API in Django that performs basic CRUD (Create, Read, Update, Delete) operations on paragraphs and words.  
+A REST API in Django that performs user signup, login along with basic operations on paragraphs and words.  
 Utilizes **Django Rest Framework** with **SimpleJWT** for token-based authentication.  
 Ensures proper request data validation and secure user authentication.  
 
