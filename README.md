@@ -134,7 +134,7 @@ The project is designed to manage user-submitted paragraphs, providing endpoints
 
    Click on the Authorize button in the Swagger UI.  
    Enter the token in the following format:  
-   Bearer <access_token>
+   Bearer <access_token>  
    For example :
    ```
    Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIxMjIxNjcyLCJpYXQiOjE3MjEyMTgwNzIsImp0aSI6IjAxYWI2YTUyOGZkNTRlNjQ4MTU5ZGEzYjJhNDgzZDhjIiwidXNlcl9pZCI6MX0.e5C57PJzer4O5GPRt2HxksHSnXVOqazeXJtuxVgVvqY```  
