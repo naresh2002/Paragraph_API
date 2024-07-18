@@ -134,10 +134,13 @@ The project is designed to manage user-submitted paragraphs, providing endpoints
 
    Click on the Authorize button in the Swagger UI.  
    Enter the token in the following format:  
-   Bearer <access_token>  
+   Bearer <access_token>
+   For example :
+   ```
+   Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIxMjIxNjcyLCJpYXQiOjE3MjEyMTgwNzIsImp0aSI6IjAxYWI2YTUyOGZkNTRlNjQ4MTU5ZGEzYjJhNDgzZDhjIiwidXNlcl9pZCI6MX0.e5C57PJzer4O5GPRt2HxksHSnXVOqazeXJtuxVgVvqY```  
    Click Authorize and then Close.  
 
-3. **Current User** [GET]  
+4. **Current User** [GET]  
 
    ``` /api/current_user/ ```  
 
@@ -150,7 +153,7 @@ The project is designed to manage user-submitted paragraphs, providing endpoints
    -H "Authorization: Bearer <access_token>"
    ```
 
-4. **Add Paragraph** [POST]  
+5. **Add Paragraph** [POST]  
 
    ``` /api/add_paragraph/ ```  
 
@@ -174,7 +177,7 @@ The project is designed to manage user-submitted paragraphs, providing endpoints
    }'
    ```
 
-5. **Search Word** [GET]  
+6. **Search Word** [GET]  
 
    ``` /api/search_word/{word}/ ```  
 
@@ -187,7 +190,7 @@ The project is designed to manage user-submitted paragraphs, providing endpoints
    -H "Authorization: Bearer <access_token>"
    ```
 
-6. **Logout** [POST]  
+7. **Logout** [POST]  
 
    ``` /api/logout/ ```  
 
